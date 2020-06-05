@@ -1,7 +1,9 @@
 #include "toolbox.h"
 
 #include <QPainter>
+#include <QPainterPath>
 #include <QBrush>
+#include <QPolygon>
 #include <QPaintEvent>
 #include <QTextItem>
 #include <QPoint>
@@ -116,20 +118,21 @@ void ToolBox::paintEvent(QPaintEvent *event)
             QPoint arrowTip(subTopLeft);
             subBottomLeft += QPoint(0, 40);
             arrowTip -= QPoint(arrowWidth, -20);
-            static const QPoint points[3] = {
-                QPoint(subTopLeft),
-                QPoint(subBottomLeft),
-                QPoint(arrowTip)
-            };
+            QPainterPath triangle;
+                triangle.moveTo(subTopLeft),
+                triangle.lineTo(subBottomLeft),
+                triangle.lineTo(arrowTip);
+
             QPainter painter(this);
             painter.setBrush(back);
             painter.setPen(Qt::NoPen);
-            painter.drawPolygon(points, 3);
+            painter.drawPath(triangle);
             painter.setPen(Qt::white);
             for(int i=0; i<tools.count(); i++){
                 QRect toolRect(subTopLeft, m_buttonSize + QSize(130, 0));
                 if(m_subToolActivated == i){
                     gc.fillRect(toolRect, highlightedBack);
+                    gc.fillPath(triangle, highlightedBack);
                 }else{
                     gc.fillRect(toolRect, back);
                 }
