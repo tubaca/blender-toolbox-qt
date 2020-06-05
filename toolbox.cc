@@ -1,8 +1,10 @@
 #include "toolbox.h"
 
 #include <QPainter>
+#include <QBrush>
 #include <QPaintEvent>
 #include <QTextItem>
+#include <QPoint>
 
 ToolBox::ToolBox(QWidget *parent) :
     QWidget(parent), m_activated(-1), m_padding(10), m_subToolActivated(-1), m_buttonSize(40, 40),
@@ -12,7 +14,7 @@ ToolBox::ToolBox(QWidget *parent) :
     setWindowFlags(Qt::Widget | Qt::FramelessWindowHint);
     setAttribute(Qt::WA_NoSystemBackground, true);
     setAttribute(Qt::WA_TranslucentBackground, true);
-    m_timer.setInterval(1000);
+    m_timer.setInterval(150);
     m_timer.setSingleShot(true);
 
     connect(&m_timer, &QTimer::timeout, this, &ToolBox::longPressEvent);
@@ -66,6 +68,7 @@ void ToolBox::paintEvent(QPaintEvent *event)
         p.addRoundedRect(backRect, 3, 3);
         gc.fillPath(p, back);
         topLeft += QPoint(0, 2+h);
+
     }
 
     int breakCount = 0;
@@ -100,6 +103,7 @@ void ToolBox::paintEvent(QPaintEvent *event)
 
     }
 
+    int arrowWidth = 20;
     QPoint subTopLeft(0,0);
     if(m_longPressed){
         QVector<Tool> tools = m_tools[m_activated].subTools();
@@ -107,6 +111,21 @@ void ToolBox::paintEvent(QPaintEvent *event)
 
         if(!tools.isEmpty()){
             subTopLeft = QPoint(m_toolRects[m_activated].topRight());
+            subTopLeft += QPoint(arrowWidth, 0);
+            QPoint subBottomLeft(subTopLeft);
+            QPoint arrowTip(subTopLeft);
+            subBottomLeft += QPoint(0, 40);
+            arrowTip -= QPoint(arrowWidth, -20);
+            static const QPoint points[3] = {
+                QPoint(subTopLeft),
+                QPoint(subBottomLeft),
+                QPoint(arrowTip)
+            };
+            QPainter painter(this);
+            painter.setBrush(back);
+            painter.setPen(Qt::NoPen);
+            painter.drawPolygon(points, 3);
+            painter.setPen(Qt::white);
             for(int i=0; i<tools.count(); i++){
                 QRect toolRect(subTopLeft, m_buttonSize + QSize(130, 0));
                 if(m_subToolActivated == i){
@@ -120,6 +139,7 @@ void ToolBox::paintEvent(QPaintEvent *event)
                 gc.drawText(iconRect.bottomRight() + QPoint(10, -5), tools[i].name());
                 subTopLeft += QPoint(0, m_buttonSize.height());
                 m_secondaryTools.push_back(toolRect);
+
             }
         }
     }
@@ -128,7 +148,7 @@ void ToolBox::paintEvent(QPaintEvent *event)
     int h = topLeft.y() + m_buttonSize.height() + 2;
 
     if(m_longPressed){
-        w = w*2 + 130;
+        w = w*2 + 130 + arrowWidth;
         if(subTopLeft.y() > topLeft.y()){
             h = subTopLeft.y() + m_buttonSize.height() + 2;
         }
