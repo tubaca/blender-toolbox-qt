@@ -132,6 +132,7 @@ void ToolBox::paintEvent(QPaintEvent *event)
                 QRect toolRect(subTopLeft, m_buttonSize + QSize(130, 0));
                 if(m_subToolActivated == i){
                     gc.fillRect(toolRect, highlightedBack);
+                    if(m_subToolActivated == 0)
                     gc.fillPath(triangle, highlightedBack);
                 }else{
                     gc.fillRect(toolRect, back);

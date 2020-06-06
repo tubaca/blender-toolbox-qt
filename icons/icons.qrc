@@ -38,5 +38,6 @@
         <file>light_select.svg</file>
         <file>light_tool_perspectivegrid.svg</file>
         <file>light_tool_zoom.svg</file>
+        <file>light_calligraphy.svg</file>
     </qresource>
 </RCC>
