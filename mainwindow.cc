@@ -26,15 +26,17 @@ MainWindow::MainWindow(QWidget *parent)
         Tool brushTool("Brush", QIcon(":/light_krita_tool_freehand.svg"));
         Tool dynamicBrushTool("Dynamic Brush", QIcon(":/light_krita_tool_dyna.svg"));
         Tool multiBrushTool("Multi Brush", QIcon(":/light_krita_tool_multihand.svg"));
+        Tool smartPatchTool("Smart Patch", QIcon(":/light_krita_tool_smart_patch.svg"));
         brushTool.addSubTool(dynamicBrushTool);
         brushTool.addSubTool(multiBrushTool);
+        brushTool.addSubTool(smartPatchTool);
 
         Tool fillTool("Fill", QIcon(":/light_krita_tool_color_fill.svg"));
         Tool colorPicker("Color Picker", QIcon(":/light_krita_tool_color_picker.svg"));
-        Tool smartPatchTool("Smart Patch", QIcon(":/light_krita_tool_smart_patch.svg"));
+        Tool lazyBrushTool("Lazy Brush", QIcon(":/light_krita_tool_lazybrush.svg"));
         Tool gradientTool("Gradient", QIcon(":/light_krita_tool_gradient.svg"));
         fillTool.addSubTool(colorPicker);
-        fillTool.addSubTool(smartPatchTool);
+        fillTool.addSubTool(lazyBrushTool);
         fillTool.addSubTool(gradientTool);
 
         Tool rectangleTool("Rectangle", QIcon(":/light_krita_tool_rectangle.svg"));
@@ -43,13 +45,11 @@ MainWindow::MainWindow(QWidget *parent)
         Tool ellipseTool("Ellipse", QIcon(":/light_krita_tool_ellipse.svg"));
         Tool polylineTool("Polygon", QIcon(":/light_polyline.svg"));
         Tool pathTool("Path", QIcon(":/light_krita_draw_path.svg"));
-        Tool lazyBrushTool("Lazy Brush", QIcon(":/light_krita_tool_lazybrush.svg"));
         rectangleTool.addSubTool(lineTool);
         rectangleTool.addSubTool(ellipseTool);
         rectangleTool.addSubTool(polylineTool);
         rectangleTool.addSubTool(freehandTool);
         rectangleTool.addSubTool(pathTool);
-        rectangleTool.addSubTool(lazyBrushTool);
 
         Tool rectangularMarqueeTool("Rectangular Selection", QIcon (":/light_tool_rect_selection.svg"));
         Tool circularMarqueeTool("Elliptical Selection", QIcon (":/light_tool_elliptical_selection.svg"));

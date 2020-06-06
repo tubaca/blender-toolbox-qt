@@ -105,7 +105,7 @@ void ToolBox::paintEvent(QPaintEvent *event)
 
     }
 
-    int arrowWidth = 20;
+    int triangleWidth = 15;
     QPoint subTopLeft(0,0);
     if(m_longPressed){
         QVector<Tool> tools = m_tools[m_activated].subTools();
@@ -113,15 +113,17 @@ void ToolBox::paintEvent(QPaintEvent *event)
 
         if(!tools.isEmpty()){
             subTopLeft = QPoint(m_toolRects[m_activated].topRight());
-            subTopLeft += QPoint(arrowWidth, 0);
-            QPoint subBottomLeft(subTopLeft);
-            QPoint arrowTip(subTopLeft);
-            subBottomLeft += QPoint(0, 40);
-            arrowTip -= QPoint(arrowWidth, -20);
+            subTopLeft += QPoint(triangleWidth, 0);
+            QPoint triangleTop(subTopLeft);
+            QPoint triangleBottom(subTopLeft);
+            QPoint triangleApex(subTopLeft);
+            triangleTop += QPoint(0, 10);
+            triangleBottom += QPoint(0, 30);
+            triangleApex -= QPoint(triangleWidth, -20);
             QPainterPath triangle;
-                triangle.moveTo(subTopLeft),
-                triangle.lineTo(subBottomLeft),
-                triangle.lineTo(arrowTip);
+                triangle.moveTo(triangleTop),
+                triangle.lineTo(triangleBottom),
+                triangle.lineTo(triangleApex);
 
             QPainter painter(this);
             painter.setBrush(back);
@@ -130,12 +132,14 @@ void ToolBox::paintEvent(QPaintEvent *event)
             painter.setPen(Qt::white);
             for(int i=0; i<tools.count(); i++){
                 QRect toolRect(subTopLeft, m_buttonSize + QSize(130, 0));
+                QPainterPath subRect;
+                subRect.addRoundedRect(toolRect, 3, 3);
                 if(m_subToolActivated == i){
-                    gc.fillRect(toolRect, highlightedBack);
+                    gc.fillPath(subRect, highlightedBack);
                     if(m_subToolActivated == 0)
                     gc.fillPath(triangle, highlightedBack);
                 }else{
-                    gc.fillRect(toolRect, back);
+                    gc.fillPath(subRect, back);
                 }
                 QRect iconRect = toolRect.adjusted(m_padding, m_padding, -m_padding-130, -m_padding);
                 tools[i].icon().paint(&gc, iconRect);
@@ -152,7 +156,7 @@ void ToolBox::paintEvent(QPaintEvent *event)
     int h = topLeft.y() + m_buttonSize.height() + 2;
 
     if(m_longPressed){
-        w = w*2 + 130 + arrowWidth;
+        w = w*2 + 130 + triangleWidth;
         if(subTopLeft.y() > topLeft.y()){
             h = subTopLeft.y() + m_buttonSize.height() + 2;
         }
